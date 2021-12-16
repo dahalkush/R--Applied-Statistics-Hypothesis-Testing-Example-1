@@ -1,0 +1,112 @@
+---
+title: "midterm extra"
+author: "Kushal"
+date: "11/10/2021"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Cancer: 9.51:Wilcoxon Rank Sum Test
+#9.52
+```{r}
+data1 = read.table("data2.csv", header = TRUE, sep=",")
+summary(data1)
+by(data1$serum, data1$group, summary)
+wilcox.test(data1$serum~data1$group)
+```
+Ho: median(Caucasian)= median(African-American)
+Ha: median(Caucasian) is not equal to median(African-American)
+Test Statistic: W*= 86
+P-value: 0.5599
+Conclusion (at the .05 level): Fail to reject Ho. Here p-value is greater than (alpha=0.05). So,there is not sufficient evidence to reject that the median of the Caucasian is equal to the median for the African-American.
+
+
+#7.4.3
+```{r}
+pre <- c(29.8,73,98.6,58.8,60.6,57.2,57.2,89.2,97,49.8,37)
+post  <- c(57.2,69.8,98.2,62.4,67.2,70.6,67.8,95.6,98.4,63.2,63.6)
+difference <- pre - post
+summary(difference)
+shapiro.test(difference)
+```
+Assumptions:
+Ho: Data are normally distributed.
+Ha: Data are not normally distributed
+ 
+Test statistic: W*= 0.90999
+
+P-value: 0.2438
+
+Conclusion: Fail to reject Ho. The p-value is greater than (alpha=0.05).There is insufficient evidence to reject Ho. So we cannot say that difference is not normally distributed.
+```{r}
+t.test(pre,post,paired=TRUE)
+```
+Ho: Mean(Methadone group)=Mean(Placebo)
+
+Ha: Mean(Methadone group) is not equal to Mean(Placebo)
+ 
+Test statistic: t* = -3.1554
+
+P-value: 0.01024
+
+Conclusion : Reject Ho in favor of Ha. Here,p-value is less than (alpha=0.05). So there is sufficient evidence to say that Mean(Methadone group) is not equal to Mean(Placebo)
+
+
+#Obstetrics
+#12.14
+```{r}
+lengthdata = read.table("data1.csv",header=TRUE,sep=",")
+dim(lengthdata)
+head(lengthdata)
+is.factor(lengthdata$location)
+is.factor(lengthdata$code)
+lengthdata$code = factor(lengthdata$code)
+is.factor(lengthdata$code)
+model1 <- aov(birthweig~code, data=lengthdata)
+
+uhat<-resid(model1)
+
+qqnorm(uhat)
+
+shapiro.test(uhat)
+```
+
+
+Ho: Residuals normally distributed
+Ha: Residuals not normal distributed
+Test Statistic: W*= 0.97039
+P-value: 0.6121
+Conclusions: Fail to reject Ho.We do not have suficient evidence to prove that the residuals are not normally distributed.
+
+```{r}
+summary(model1)
+```
+Ho: All means are equal
+Ha: at least one mean differs
+Test Statistic: F*= 6.258
+P-value: 0.0029
+Conclusions: Reject Ho in favor of Ha. We have sufficient evidence to prove that at lease one mean birthweights differs from the group.
+
+```{r}
+TukeyHSD(model1, conf.level = 0.95)
+
+```
+
+
+#6.75
+```{r}
+patient <- c(2,6,9,33,49,66,52,37,18,11,4)
+mean(patient)
+sd(patient)
+n <- length(patient)
+n
+se <- sd(patient)/sqrt(n)
+mean(patient) + qt(c(0.025, 0.975), n-1) * se
+ci <- mean(patient) + qt(c(0.025, 0.975), n-1) * se
+```
